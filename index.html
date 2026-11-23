@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VoltGuard is a simulated smart battery management dashboard for learning battery monitoring concepts.">
+  <title>VoltGuard | Smart Battery Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="VoltGuard home">
+        <span class="brand-mark">V</span>
+        <span>volt<span class="brand-light">guard</span><small>BATTERY INTELLIGENCE</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <a class="side-link active" href="#overview"><span>▦</span> Overview</a>
+      <a class="side-link" href="#analytics"><span>⌁</span> Analytics</a>
+      <a class="side-link" href="#alerts"><span>♧</span> Alerts & events</a>
+      <div class="side-label system-label">SYSTEM</div>
+      <div class="system-card">
+        <span class="online-dot"></span>
+        <div><strong>Simulation online</strong><small>Demo battery pack</small></div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="avatar">VG</div>
+        <div><strong>Student project</strong><small>Local demo mode</small></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="breadcrumb">WORKSPACE <span>/</span> BATTERY SYSTEM</p>
+          <h1>Battery overview</h1>
+        </div>
+        <div class="top-actions">
+          <span class="demo-pill"><span class="online-dot"></span> SIMULATION MODE</span>
+          <button class="icon-button" id="exportTop" title="Export CSV" aria-label="Export CSV">⇩</button>
+        </div>
+      </header>
+
+      <section class="welcome-row" id="overview">
+        <div>
+          <h2>Good day, engineer.</h2>
+          <p>Here’s the current performance of your battery pack.</p>
+        </div>
+        <div class="control-group">
+          <button class="button button-quiet" id="resetBtn">↺ Reset</button>
+          <button class="button button-primary" id="toggleBtn">Ⅱ &nbsp; Pause simulation</button>
+        </div>
+      </section>
+
+      <section class="metric-grid">
+        <article class="metric-card soc-card">
+          <div class="metric-top"><span>STATE OF CHARGE</span><span class="metric-icon">▰</span></div>
+          <div class="soc-layout">
+            <div class="soc-ring" id="socRing"><div><strong id="socValue">82</strong><small>%</small></div></div>
+            <div class="metric-copy"><strong id="socState">Healthy charge</strong><small>Estimated remaining capacity</small><span class="trend positive">↑ Stable range</span></div>
+          </div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top"><span>PACK VOLTAGE</span><span class="metric-icon">⌁</span></div>
+          <div class="metric-value"><strong id="voltageValue">48.6</strong><span>V</span></div>
+          <div class="metric-foot"><span class="mini-line"></span><small>Nominal: 48 V</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top"><span>PACK CURRENT</span><span class="metric-icon">↯</span></div>
+          <div class="metric-value"><strong id="currentValue">2.4</strong><span>A</span></div>
+          <div class="metric-foot"><span class="direction-tag" id="currentDirection">DISCHARGING</span><small>Instantaneous</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top"><span>TEMPERATURE</span><span class="metric-icon">♨</span></div>
+          <div class="metric-value"><strong id="temperatureValue">29.4</strong><span>°C</span></div>
+          <div class="metric-foot"><span class="temp-status" id="temperatureStatus">● Normal range</span></div>
+        </article>
+      </section>
+
+      <section class="content-grid" id="analytics">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">LIVE TELEMETRY</p><h3>Battery performance</h3></div>
+            <select id="chartMetric" aria-label="Choose chart metric">
+              <option value="voltage">Voltage (V)</option>
+              <option value="soc">State of charge (%)</option>
+              <option value="temperature">Temperature (°C)</option>
+              <option value="current">Current (A)</option>
+            </select>
+          </div>
+          <div class="chart-wrap"><canvas id="telemetryChart" aria-label="Battery telemetry chart"></canvas></div>
+          <div class="chart-legend"><span><i class="legend-dot"></i><span id="chartLegendText">Pack voltage</span></span><small>Latest 20 readings</small></div>
+        </article>
+
+        <article class="panel battery-panel">
+          <div class="panel-heading"><div><p class="eyebrow">PACK DETAILS</p><h3>Battery configuration</h3></div><span class="chip">DEMO-01</span></div>
+          <div class="battery-visual">
+            <div class="battery-shell"><div class="battery-fill" id="batteryFill"></div><div class="battery-grid"></div></div>
+            <div class="battery-percent"><strong id="batteryPercent">82%</strong><small>AVAILABLE</small></div>
+          </div>
+          <div class="detail-list">
+            <div><span>Battery chemistry</span><strong>Li-ion (simulated)</strong></div>
+            <div><span>Nominal voltage</span><strong>48.0 V</strong></div>
+            <div><span>Rated capacity</span><strong>20 Ah</strong></div>
+            <div><span>Estimated energy</span><strong id="energyValue">0.79 kWh</strong></div>
+            <div><span>Battery health (SOH)</span><strong id="healthValue">96%</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel status-panel">
+          <div class="panel-heading"><div><p class="eyebrow">SYSTEM CHECK</p><h3>Protection status</h3></div><span class="status-good" id="overallStatus">● ALL SYSTEMS NORMAL</span></div>
+          <div class="protection-list">
+            <div class="protection-item"><span class="protection-icon">⌁</span><div><strong>Overvoltage protection</strong><small>Upper threshold: 54.0 V</small></div><span class="check" id="voltageCheck">✓</span></div>
+            <div class="protection-item"><span class="protection-icon">↧</span><div><strong>Undervoltage protection</strong><small>Lower threshold: 42.0 V</small></div><span class="check" id="lowVoltageCheck">✓</span></div>
+            <div class="protection-item"><span class="protection-icon">♨</span><div><strong>Temperature protection</strong><small>Alert threshold: 45 °C</small></div><span class="check" id="temperatureCheck">✓</span></div>
+          </div>
+        </article>
+
+        <article class="panel alerts-panel" id="alerts">
+          <div class="panel-heading"><div><p class="eyebrow">EVENT LOG</p><h3>Recent alerts</h3></div><button class="text-button" id="clearAlerts">Clear log</button></div>
+          <div class="alert-list" id="alertList"><div class="empty-alert"><span>✓</span><div><strong>No active alerts</strong><small>System is operating within demo limits.</small></div></div></div>
+        </article>
+      </section>
+
+      <footer><span>VOLTGUARD BMS</span><span>Educational simulation · Not connected to a physical battery</span><span id="lastUpdated">Updated just now</span></footer>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
